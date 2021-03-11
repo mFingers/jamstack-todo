@@ -1,19 +1,34 @@
-/** @jsx jsx */
-import { jsx } from 'theme-ui';
-import { Button, Container, Flex, Heading } from 'theme-ui';
-import netlifyIdentity from 'netlify-identity-widget';
-import { useEffect } from 'react';
+import React, { useContext } from 'react';
+import { Container, Heading, Button, Flex, NavLink } from 'theme-ui';
+import { Link } from 'gatsby';
+import { IdentityContext } from '../../identity-context';
 
-const Main = (props) => {
-  useEffect(() => {
-    netlifyIdentity.init({});
-  });
+const Index = (props) => {
+  const { user, identity: netlifyIdentity } = useContext(IdentityContext);
 
   return (
     <Container>
+      <Flex as="nav">
+        <NavLink as={Link} to="/" p={2}>
+          Home
+        </NavLink>
+        <NavLink as={Link} to={'/app'} p={2}>
+          Dashboard
+        </NavLink>
+        {user && (
+          <NavLink href="#!" p={2}>
+            {user.user_metadata.full_name}
+          </NavLink>
+        )}
+      </Flex>
       <Flex sx={{ flexDirection: 'column', padding: 3 }}>
         <Heading as="h1">Get Stuff Done</Heading>
-        <Button sx={{ marginTop: 2 }} onClick={() => netlifyIdentity.open()}>
+        <Button
+          sx={{ marginTop: 2 }}
+          onClick={() => {
+            netlifyIdentity.open();
+          }}
+        >
           Log In
         </Button>
       </Flex>
@@ -21,4 +36,4 @@ const Main = (props) => {
   );
 };
 
-export default Main;
+export default Index;
